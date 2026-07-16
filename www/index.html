@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smith Chart</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='7' fill='none' stroke='%233987e5' stroke-width='1.5'/><circle cx='11' cy='8' r='4' fill='none' stroke='%233987e5'/></svg>">
+</head>
+<body>
+<header class="topbar">
+  <h1>Smith Chart</h1>
+  <span class="sub">Rust · WebAssembly · everything in your browser</span>
+  <div class="spacer"></div>
+  <button id="btn-reset" title="Reset view (0)">Reset view</button>
+  <button id="btn-share" title="Copy a link that reproduces this exact chart">Share link</button>
+  <button id="btn-png" title="Download the chart as a PNG">Export PNG</button>
+  <button id="btn-theme" title="Toggle light/dark">Theme</button>
+</header>
+
+<main>
+  <div class="chart-wrap" id="chart-wrap">
+    <canvas id="chart"></canvas>
+    <div class="dropzone" id="dropzone">Drop Touchstone files (.s1p / .s2p)</div>
+  </div>
+
+  <aside class="sidebar">
+    <section>
+      <h2>Cursor</h2>
+      <dl class="readout" id="readout">
+        <div><dt>Γ</dt><dd id="ro-gamma">—</dd></div>
+        <div><dt>|Γ| ∠</dt><dd id="ro-polar">—</dd></div>
+        <div><dt>Z</dt><dd id="ro-z">—</dd></div>
+        <div><dt>z (norm)</dt><dd id="ro-zn">—</dd></div>
+        <div><dt>Y</dt><dd id="ro-y">—</dd></div>
+        <div><dt>VSWR</dt><dd id="ro-vswr">—</dd></div>
+        <div><dt>RL / ML</dt><dd id="ro-rl">—</dd></div>
+        <div><dt>λ→gen / λ→load</dt><dd id="ro-wl">—</dd></div>
+      </dl>
+      <div class="snapline" id="snapline"></div>
+    </section>
+
+    <section>
+      <h2>Markers</h2>
+      <ul class="list" id="marker-list"></ul>
+      <div class="row">
+        <input type="number" id="mk-r" placeholder="R (Ω)" step="any">
+        <input type="number" id="mk-x" placeholder="X (Ω)" step="any">
+        <button id="btn-addmarker" title="Add a marker at this impedance">Add</button>
+      </div>
+      <div class="row">
+        <button id="btn-clearmarkers" class="ghost">Clear markers</button>
+      </div>
+      <p class="hint">Click the chart to drop a marker; clicks snap to trace points.</p>
+    </section>
+
+    <section>
+      <h2>Traces</h2>
+      <ul class="list" id="trace-list"></ul>
+      <div class="row">
+        <button id="btn-load">Load .s1p / .s2p…</button>
+        <button id="btn-demo" class="ghost">Demo</button>
+        <input type="file" id="file-input" accept=".s1p,.s2p,.S1P,.S2P" multiple hidden>
+      </div>
+    </section>
+
+    <section>
+      <h2>Display</h2>
+      <label><input type="checkbox" id="opt-imp" checked> Impedance grid (R, jX)</label>
+      <label><input type="checkbox" id="opt-adm"> Admittance grid (G, jB)</label>
+      <label><input type="checkbox" id="opt-labels" checked> Grid labels</label>
+      <label><input type="checkbox" id="opt-vswr"> VSWR circles through markers</label>
+      <div class="row">
+        <label class="inline" for="opt-q">Q contour</label>
+        <input type="number" id="opt-q" min="0" step="any" placeholder="off" style="width:5.5em">
+      </div>
+      <div class="row">
+        <label class="inline" for="opt-z0">Z₀ (Ω)</label>
+        <input type="number" id="opt-z0" min="0.001" step="any" value="50" style="width:5.5em">
+      </div>
+    </section>
+  </aside>
+</main>
+
+<footer class="statusbar">
+  <span id="status">drag to pan · scroll to zoom · click to mark · 0 resets</span>
+  <span class="spacer"></span>
+  <span id="zoom">zoom 1.0×</span>
+</footer>
+
+<noscript><p style="padding:1em">This app needs JavaScript and WebAssembly.</p></noscript>
+<script type="module" src="main.js"></script>
+</body>
+</html>
